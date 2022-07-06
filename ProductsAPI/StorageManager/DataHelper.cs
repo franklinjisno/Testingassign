@@ -25,8 +25,8 @@ namespace ProductsAPI.StorageManager
         }
         public static List<ProductListItem> GetAll()
         {
-            List<ProductListItem> list = new List<ProductListItem>();
-            list = products.Select(x => new ProductListItem { Id = x.Id, Name = x.Name }).ToList();
+            List<ProductListItem> list = products.Select(x => new ProductListItem { Id = x.Id, Name = x.Name }).ToList();
+
 
             return list;
         }

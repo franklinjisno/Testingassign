@@ -28,10 +28,11 @@ namespace ProductsAPI.Business
         public BusinessResponse<List<ProductListItem>> GetAllProducts()
         {
             BusinessResponse<List<ProductListItem>> response = new BusinessResponse<List<ProductListItem>>();
-            if (DataHelper.GetAll().Count > 0)
+            var products = productstorage.GetAll();
+            if (products.Count > 0)
             {
                 response.StatusCode=System.Net.HttpStatusCode.OK;
-                response.Response =  productstorage.GetAll();
+                response.Response = products;
                 return response;
             }
             else
@@ -44,35 +45,31 @@ namespace ProductsAPI.Business
         public BusinessResponse<ProductDetails> GetProductDetails(string Id)
         {
             BusinessResponse<ProductDetails> response = new BusinessResponse<ProductDetails>();
-            if (Id == null)
+            if (string.IsNullOrEmpty(Id))
             {
                 response.StatusCode = System.Net.HttpStatusCode.BadRequest;
                 response.Message = "Id cannot be null";
                 return response;
             }
-            if(Id != null)
+            response.Response = productstorage.GetProduct(Id);
+            if(response.Response != null)
             {
-                response.Response = productstorage.GetProduct(Id);
-                if(response.Response != null)
-                {
-                    response.StatusCode = System.Net.HttpStatusCode.OK;
-                    response.Message = "Success";
-                    return response;
-                }
-                else
-                {
-                    response.StatusCode = System.Net.HttpStatusCode.BadRequest;
-                    response.Message = "No Product Exists";
-                    return response;
-                }
+                 response.StatusCode = System.Net.HttpStatusCode.OK;
+                 response.Message = "Success";
+                 return response;
             }
-                return null;
+            else
+            {
+                 response.StatusCode = System.Net.HttpStatusCode.NotFound;
+                 response.Message = "No Product Exists";
+                 return response;
+            }
         }
 
         public BusinessResponse<bool> DeleteProduct(string Id)
         {
             BusinessResponse<bool> response = new BusinessResponse<bool>();
-            if (Id == null)
+            if (string.IsNullOrEmpty(Id))
             {
                 response.StatusCode = System.Net.HttpStatusCode.BadRequest;
                 response.Message = "Product cannot be null";
@@ -81,7 +78,7 @@ namespace ProductsAPI.Business
             var existingProduct = GetProductDetails(Id);
             if (existingProduct.Response == null)
             {
-                response.StatusCode = System.Net.HttpStatusCode.BadRequest;
+                response.StatusCode = System.Net.HttpStatusCode.NotFound;
                 response.Message = "No Product Exists";
                 return response;
             }
