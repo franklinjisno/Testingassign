@@ -35,26 +35,26 @@ namespace ProductsAPI.Controllers
         [HttpGet]
         public IActionResult GetProducts()
         {
-            var products = productbusiness.GetAllProducts();
-            if (products != null)
+            var response = productbusiness.GetAllProducts();
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return Ok(products);
+                return Ok(response.Response);
             }
             else
-                return NotFound();
+                return StatusCode((int)response.StatusCode, response.Message);
         }
 
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
         public IActionResult GetProductDetails(string id)
         {
-            var product = productbusiness.GetProductDetails(id);
-            if (product != null)
+            var response = productbusiness.GetProductDetails(id);
+            if (response.StatusCode == System.Net.HttpStatusCode.OK)
             {
-                return Ok(product);
+                return Ok(response.Response);
             }
             else
-                return NotFound("Product Not Found");
+                return StatusCode((int)response.StatusCode, response.Message);
         }
 
 

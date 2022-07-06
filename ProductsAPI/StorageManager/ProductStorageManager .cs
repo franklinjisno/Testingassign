@@ -9,12 +9,10 @@ namespace ProductsAPI.StorageManager
         {
                 return DataHelper.Add(product);       
         }
-
         public List<ProductListItem> GetAll()
         {
                 return DataHelper.GetAll();
         }
-
         public ProductDetails GetProduct(string Id)
         {
                 return DataHelper.GetProduct(Id);
